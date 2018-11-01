@@ -1,0 +1,112 @@
+<style>
+
+    *{
+        box-sizing: border-box;
+    }
+
+    a{
+        color: #fff;
+        text-decoration: none;
+    }
+
+    table tr th{
+        border: 1px solid #bbf2f4;
+        padding: 8px;
+        line-height: 1.42857143;
+        vertical-align: top;
+        text-align: left;
+    }
+
+    table tr td{
+        width: 100px;
+        border: 1px solid #b2eef4;
+        vertical-align: middle;
+        padding: 8px;
+        line-height: 1.42857143;
+    }
+
+    img{
+        width: 50px;
+        height: 50px;
+    }
+
+    .del,.upd{
+        display: inline-block;
+        width: 35px;
+        height: 25px;
+        text-align: center;
+        background: #60a0ff;
+        border-radius: 3px;
+        line-height: 25px;
+    }
+
+    .upd{
+        margin-left: 10px;
+    }
+
+    .id{
+        position: relative;
+    }
+
+    .asc{
+        display: inline-block;
+        position: absolute;
+        top:8px;
+        right: 50px;
+        width: 8px;
+        height: 8px;
+        clip-path:polygon(50% 0,100% 100%,0 100%);
+        background: #e2e2e2;
+    }
+
+    .desc{
+        display: inline-block;
+        position: absolute;
+        top:18px;
+        right: 50px;
+        width: 8px;
+        height: 8px;
+        clip-path:polygon(0 0,100% 0,50% 100%);
+        background: #e2e2e2;
+    }
+
+</style>
+<form action="/admin/user_add" method='get' enctype="multipart/form-data">
+    <input type="submit" value="添加用户">
+</form>
+<table>
+    <tr>
+        <th class="id">ID <a class="arrow asc" href="/admin/userlist?o=Id asc"></a><a class="arrow desc" href="/admin/userlist?o=Id desc"></a></th>
+        <th>头像</th>
+        <th>姓名</th>
+        <th>邮箱</th>
+        <th>手机号码</th>
+        <th>状态</th>
+        <th>操作</th>
+    </tr>
+    {{#each dataList}}
+        <tr>
+            <td>{{Id}}</td>
+            <td><img src="/images/{{tuxiang}}" alt="" ></td>
+            <td>{{name}}</td>
+            <td>{{youxiang}}</td>
+            <td>{{shoujihaoma}}</td>
+            <td>{{zhuangtai}}</td>
+            <td><a href="/admin/deleteListData?mid={{Id}}" class="del">删除</a><a href="/admin/updateUser?mid={{Id}}" class="upd">更新</a></td>
+        </tr><br>
+    {{/each}}
+</table>
+
+<script src="/javascripts/jQuery.js"></script>
+<script>
+    $(function () {
+        $(".desc").click(function () {
+            $(this).css({background:"#333"});
+            $(".asc").css({background:""});
+        });
+        $(".asc").click(function(){
+            $(this).css({background:"#333"});
+            $(".desc").css({background:""});
+        });
+    })
+</script>

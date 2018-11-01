@@ -1,0 +1,225 @@
+<style>
+    *{
+        margin: 0;
+        padding: 0;
+    }
+    
+    body{
+        margin: 0;
+        padding: 0;
+        background: rgba(165, 218, 214,.2);
+    }
+
+    .title{
+        margin: 35px;
+        font-weight: 600;
+        font-size: 20px;
+    }
+
+    .web-param{
+        width: 95%;
+        height: auto;
+        margin: 0 auto;
+        background: #fff;
+    }
+
+    .tabs{
+        width:100px;
+        height: 30px;
+        border-top: 4px solid #1E9FFF;
+    }
+
+    .content{
+        margin-top: 30px;
+        margin-left: 50px;
+    }
+
+    .row{
+        position: relative;
+        height: 34px;
+        margin-bottom: 15px;
+    }
+
+
+
+    .row>div{
+        width: 750px;
+    }
+
+    .row label{
+        display: inline-block;
+        width: 25%;
+        text-align: right;
+        font-size: 14px;
+        line-height: 1;
+        font-weight: 700;
+    }
+
+    .row input{
+        width: 70%;
+        height: 20px;
+        padding: 3px;
+        margin-left: 20px;
+    }
+
+    .row .web-descript label{
+        vertical-align: top;
+    }
+
+    .row .web-descript textarea{
+        display: inline-block;
+        width: 70%;
+        padding: 3px;
+        margin-left: 20px;
+    }
+
+    .web-logo{
+        position: relative;
+    }
+
+    .web-logo .up{
+        opacity: 0;
+        z-index: 100;
+        position: absolute;
+        right: 0;
+        top: 0;
+        padding: 0;
+        width: 80px;
+        height: 30px;
+    }
+
+    .web-logo .file-upload{
+        position: absolute;
+        right: 0;
+        top: -1px;
+        padding: 0;
+        width: 80px;
+        height: 32px;
+        border: 1px solid #00ffcc;
+        background-color: #00ffcc;
+        text-align: center;
+        line-height: 29px;
+        cursor: pointer;
+    }
+
+    .web-btn input{
+        width: 70px;
+        height: 35px;
+        border: 0;
+        border-radius: 10px;
+        cursor: pointer;
+    }
+
+    .web-btn .reset{
+        float: left;
+        position: relative;
+        margin-left: 250px;
+        background: #ffb94b;
+    }
+
+    .web-btn .login{
+        float: right;
+        margin-right: 50px;
+        background: #77a1ff;
+    }
+
+
+</style>
+
+
+<h1 class="title">配置字段信息</h1>
+<div class="web-param">
+    <div class="tabs">基本参数</div>
+    <div class="content">
+        <form action="/admin/website_data" method="post" enctype="multipart/form-data">
+            <div class="row">
+                <div class="web-title">
+                    <label>网站标题</label>
+                    <input type="text" class="i-title"   name="title" value={{data.title}}>
+                </div>
+            </div>
+            <div class="row">
+              <!--  <div class="web-logo">
+                    <label>网站LOGO</label>
+                            <input type="text" placeholder=""   class="i-logo" name="web-logo-path" value={{data.logo}}>
+                            <a href=><img src="/images/{{data.logo}}" alt="" style="position: absolute;right:80px;top: 0;;z-index: 999;width: 80px;height: 30px;" ></a>
+                            <button class="file-upload">上传</button>
+                            <input type="file" value="上传" class="up" name="logo">
+                </div>-->
+                <div class="web-logo">
+                    <label>网站LOGO</label>
+                    <input type="text" placeholder=""   class="i-logo" name="web-logo-path" value={{data.logo}}>
+                    <a href=><img src="/images/{{data.logo}}" alt="" style="position: absolute;right:80px;top: 0;;z-index: 999;width: 80px;height: 30px;" class="userImg"></a>
+                    <button class="file-upload">上传</button>
+                    <input type="file" value="上传" class="up" name="logo">
+                </div>
+            </div>
+            <div class="row">
+                <div class="web-control">
+                    <label>联系人</label>
+                    <input type="text" placeholder="" value="{{data.control}}" class="i-control" name="control">
+                </div>
+            </div>
+            <div class="row">
+                <div class="web-address">
+                    <label>联系地址</label>
+                    <input type="text" placeholder="" value="{{data.address}}" name="address" class="i-address" >
+                </div>
+            </div>
+            <div class="row">
+                <div class="web-keyword">
+                    <label>网站关键字</label>
+                    <input type="text" placeholder="" value="{{data.keyword}}" name="keyword" class="i-keyword" >
+                </div>
+            </div>
+            <div class="row" style="height: 155px;">
+                <div class="web-descript">
+                    <label>网站描述</label>
+                    <textarea  style="resize:none;height:155px;" placeholder=""  name="descript" class="i-descript" >{{data.descript}}</textarea>
+                </div>
+            </div>
+            <div class="row">
+                <div class="web-record">
+                    <label>网站备案号</label>
+                    <input type="text" placeholder="" value="{{data.record}}" name="record" class="i-record" >
+                </div>
+            </div>
+            <div class="row">
+                <div class="web-open">
+                    <label>是否开启浏览模式</label>
+                    <input type="text" placeholder="" name="open" class="i-open" >
+                </div>
+            </div>
+            <div class="row">
+                <div class="web-btn">
+                    <input type="reset" value="撤销" class="reset">
+                    <input type="submit" value="提交" class="login">
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<script src="/javascripts/jQuery.js"></script>
+<script>
+    //当文件框的值发生变化时 就调用ajax改变图片的路径
+    $(".up").change(function () {
+        //创建FormData对象 将文件转化为二进制
+        var dataFile = new FormData();
+        //FromData对象是DOM对象因此在jQuery中要转化
+        var file = $(this).prop("files")[0];
+        //使用append方法添加字段
+        dataFile.append("logo",file);
+        $.ajax({
+            url:"/admin/upImg",
+            type:"post",
+            data:dataFile,
+            contentType:false,
+            processData:false,
+            success:function (data) {
+              console.log(data);
+                $(".i-logo").prop("value",data);
+                $(".userImg").prop("src","/images/"+data);
+            }
+        })
+    })
+</script>

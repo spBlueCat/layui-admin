@@ -1,0 +1,159 @@
+<script src="/javascripts/jQuery.js"></script>
+<style>
+    *{
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    .row{
+        width: 100%;
+        height: 70px;
+        margin-right: -15px;
+        margin-left: -15px;
+        margin-bottom: 15px;
+    }
+
+    .row label:nth-of-type(1){
+        float: left;
+        width: 20%;
+        height: 30px;
+        line-height: 30px;
+        text-align: center;
+        padding-top: 7px;
+        margin-left: 25px;
+        font-size: 20px;
+    }
+
+    .row label:nth-of-type(2){
+        float: left;
+        text-align: right;
+        padding-top: 7px;
+    }
+
+    input{
+        width: 200px;
+        height: 30px;
+    }
+
+
+
+</style>
+<div>
+    <div class="title">
+        添加商品
+        <span style="margin-left: 25px;"><a href="/admin/nav">返回</a></span>
+    </div>
+    <form action="/admin/nav_add_data" method="post">
+        <div class="row">
+            <label for="">商品名称</label>
+            <div class="inputs"><input type="text" name="navName"></div>
+        </div>
+        <div class="row">
+            <label for="">商品所属</label>
+            <div class="inputs">
+                <label for="">
+                    <select name="parentId" id="select">
+                        <option value="">顶级栏目</option>
+                    </select>
+                </label>
+            </div>
+        </div>
+        <div class="row">
+            <label for="">商品页面</label>
+            <div class="inputs">
+                <label for="">
+                    <input type="text" name="sort">
+                </label>
+            </div>
+        </div>
+        <div class="row">
+            <label for="">商品页面名称</label>
+            <div class="inputs">
+                <label for="">
+                    <input type="text" name="pageName">
+                </label>
+            </div>
+        </div>
+        <div class="row">
+            <label for="">商品关键字</label>
+            <div class="inputs">
+                <label for="">
+                    <input type="text" name="keywords">
+                </label>
+            </div>
+        </div>
+        <div class="row">
+            <label for="">商品描述</label>
+            <div class="inputs">
+                <label for="">
+                    <input type="text" name="description">
+                </label>
+            </div>
+        </div>
+        <input type="submit" vlaue="提交">
+    </form>
+</div>
+
+<script>
+    function navSelect() {
+        $.ajax({
+            url:'/admin/nav_select',
+            success:function (data) {
+                (function wei() {
+                    /*
+                    * data 数据
+                    * pid  每条数据的id
+                    * level 层级
+                    * */
+                    function navTree(data,pid,level) {
+                        let navArr = []; //定义一个空数组 用来存放整理的数据
+                        let str;
+                        for(let i = 0 ,len= data.length;i<len;i++){
+                            if(data[i].parentId == pid){
+                                let line = " ";
+                                data[i].level = level;
+                                for(let j=0;j<level;j++){
+                                    line += "━ ";
+                                }
+                                if(level == 0){
+                                    str = "";
+                                }else{
+                                    str = "┃";
+                                }
+                                $("#select").append(`<option value=${pid}>${line+str+data[i].navName}</option>`);
+                                navArr.push(data[i]);
+                                navTree(data,data[i].Id,data[i].level+1);
+                            }
+                        }
+                    }
+                    return navTree(data,0,0);
+                })();
+
+                /* console.time("timer2");
+                 function navTree(data,pid,level) {
+                     let navArr = []; //定义一个空数组 用来存放整理的数据
+                     let str;
+                     for(let i = 0 ,len= data.length;i<len;i++){
+                         if(data[i].parentId == pid){
+                             data[i].level = level;
+                             if(level == 0){
+                                 str = "";
+                             }else{
+                                 str = "├";
+                             }
+                             $(".tab").append(`<tr><td>${data[i].Id}</td><td style="text-indent:${data[i].level*20}px">${str+data[i].navName}</td><td>${data[i].level}</td></tr>`);
+                             navArr.push(data[i]);
+                             navTree(data,data[i].Id,data[i].level+1);
+                         }
+                     }
+                 }
+                 navTree(data,0,0);
+                 console.timeEnd("timer2");*/
+            }
+        })
+    }
+    navSelect();
+
+
+</script>

@@ -1,0 +1,125 @@
+<script src="/javascripts/jQuery.js"></script>
+<style>
+    *{
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    .row{
+        width: 100%;
+        height: 70px;
+        margin-right: -15px;
+        margin-left: -15px;
+        margin-bottom: 15px;
+    }
+
+    .row label:nth-of-type(1){
+        float: left;
+        width: 20%;
+        height: 30px;
+        line-height: 30px;
+        text-align: center;
+        padding-top: 7px;
+        margin-left: 25px;
+        font-size: 20px;
+    }
+
+    .row label:nth-of-type(2){
+        float: left;
+        text-align: right;
+        padding-top: 7px;
+    }
+
+    input{
+        width: 200px;
+        height: 30px;
+    }
+
+
+
+</style>
+<div>
+    <div class="title">
+        添加商品
+        <span style="margin-left: 25px;"><a href="/admin/nav">返回</a></span>
+    </div>
+    <form action="/admin/nav_editor_data" method="post">
+        <div class="row">
+            <label for="">商品名称</label>
+            <div class="inputs"><input type="text" name="navName" value="{{data.navName}}"></div>
+        </div>
+        <div class="row">
+            <label for="">商品页面</label>
+            <div class="inputs">
+                <label for="">
+                    <input type="text" name="sort" value="{{data.sort}}">
+                </label>
+            </div>
+        </div>
+        <div class="row">
+            <label for="">商品页面名称</label>
+            <div class="inputs">
+                <label for="">
+                   <input type="text" name="pageName" value="{{data.pageName}}">
+                </label>
+            </div>
+        </div>
+        <div class="row">
+            <label for="">商品关键字</label>
+            <div class="inputs">
+                <label for="">
+                    <input type="text" name="keywords" value="{{data.keywords}}">
+                </label>
+            </div>
+        </div>
+        <div class="row">
+            <label for="">商品描述</label>
+            <div class="inputs">
+                <label for="">
+                    <input type="text" name="description" value="{{data.description}}">
+                </label>
+            </div>
+        </div>
+        <input type="submit" vlaue="修改页面">
+        <input type="reset" value="重置">
+    </form>
+</div>
+
+<!--
+<script>
+    function navSelect() {
+        $.ajax({
+            url:'/admin/nav_select',
+            success:function (data) {
+                (function wei() {
+                    function navTree(data,pid,level) {
+                        let navArr = []; //定义一个空数组 用来存放整理的数据
+                        let str;
+                        for(let i = 0 ,len= data.length;i<len;i++){
+                            if(data[i].parentId == pid){
+                                let line = " ";
+                                data[i].level = level;
+                                for(let j=0;j<level;j++){
+                                    line += "━ ";
+                                }
+                                if(level == 0){
+                                    str = "";
+                                }else{
+                                    str = "┃";
+                                }
+                                $("#select").append(`<option value=${pid}>${line+str+data[i].navName}</option>`);
+                                navArr.push(data[i]);
+                                navTree(data,data[i].Id,data[i].level+1);
+                            }
+                        }
+                    }
+                    return navTree(data,0,0);
+                })();
+            }
+        })
+    }
+    navSelect();
+
+
+</script>-->

@@ -1,0 +1,152 @@
+<style>
+    .title{
+        margin-bottom: 30px;
+    }
+
+    .title .add{
+        display: block;
+        width: 75px;
+        height: 35px;
+        line-height: 35px;
+        background: #77a1ff;
+        color: #fff;
+        text-align: center;
+        border-radius: 8px;
+        text-decoration: none;
+    }
+
+    table tr th{
+        border: 1px solid #bbf2f4;
+        padding: 8px;
+        line-height: 1.42857143;
+        vertical-align: top;
+        text-align: left;
+    }
+
+    table tr td{
+        width: auto;
+        border: 1px solid #b2eef4;
+        vertical-align: middle;
+        padding: 8px 15px;
+        line-height: 1.42857143;
+    }
+
+    .del,.editor,.addtxt{
+        display: inline-block;
+        width: auto;
+        padding-left: 5px;
+        padding-right: 5px;
+        margin: 0 3px;
+        height: 25px;
+        line-height: 25px;
+        font-size: 14px;
+        border-radius: 5px;
+        text-align: center;
+        color: #fff;
+        box-sizing: border-box;
+    }
+
+    .del{
+        background: #f34b36;
+        float: right;
+    }
+
+    .editor{
+        background: #77a1ff;
+        float: left;
+    }
+
+    .addtxt{
+        background: #e1ad83;
+        float: left;
+    }
+    
+    .editor a{
+        text-decoration: none;
+        color: #fff;
+    }
+    
+    .addtxt a{
+        text-decoration: none;
+        color: #fff;
+    }
+
+</style>
+<div class="title"><a href="/admin/nav_add" class="add">增加商品</a></div>
+<div class="table">
+    <table border="0" cellpadding="0" cellspacing="0" class="tab">
+        <tr class="tab-title">
+            <td>ID</td>
+            <td>商品列表</td>
+            <td>项目编号</td>
+            <td>操作</td>
+        </tr>
+
+    </table>
+</div>
+<script src="/javascripts/jQuery.js"></script>
+<script>
+    $(function () {
+        var DATA;
+    function navSelect() {
+        $.ajax({
+            url:'/admin/nav_select',
+            success:function (data) {
+                (function wei() {
+                  /*
+                  * data 数据
+                  * pid  每条数据的id
+                  * level 层级
+                  * */
+                  $('.tab-title').siblings().remove();
+                    DATA = data;
+                    function navTree(data,pid,level) {
+                        let navArr = []; //定义一个空数组 用来存放整理的数据
+                        let str;
+                        for(let i = 0 ,len= data.length;i<len;i++){
+                            if(data[i].parentId == pid){
+                                data[i].level = level;
+                                if(level == 0){
+                                    str = "";
+                                }else{
+                                    str = "├";
+                                }
+                                $(".tab").append(`<tr><td>${data[i].Id}</td><td style="text-indent:${data[i].level*20}px">${str+data[i].navName}</td><td>${data[i].level}</td><td><span style="cursor: pointer" class="del" sid=${data[i].Id}>删除</span><span class="editor"><a href="/admin/nav_editor">编辑</a></span ><span class="addtxt"><a  href="/admin/add_txt">新增文章</a></span></td></tr>`);
+                                navArr.push(data[i]);
+                                navTree(data,data[i].Id,data[i].level+1);
+                            }
+                        }
+                    }
+                    return navTree(data,0,0);
+                })();
+            }
+        })
+    }
+    navSelect();
+
+
+        let ids = [];
+        $(".tab").on("click",$(".del"),function (event) {
+           let sid = $(event.target).attr("sid");
+            ids.push(sid);
+            function del(data,id) {
+                for(let i=0;i<data.length;i++){
+                    if(data[i].parentId==id){
+                        ids.push(data[i].Id);
+                        del(DATA,data[i].Id)
+                    }
+                }
+            }
+            del(DATA,sid);
+            $.ajax({
+                url:"/admin/nav_del",
+                data:{idp:ids},
+                success:function () {
+                    navSelect();
+                }
+            })
+
+        });
+    });
+</script>
+

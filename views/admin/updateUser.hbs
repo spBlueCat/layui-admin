@@ -1,0 +1,86 @@
+<style>
+    label{
+        display: block;
+        margin-bottom: 10px;
+    }
+
+
+
+
+
+    label span{
+        display: inline-block;
+        width: 100px;
+        height: 20px;
+        font-size: 15px;
+        font-weight: 700;
+        margin-left: 10px;
+        text-align: left;
+        vertical-align: middle;
+    }
+
+    label  input{
+        display: inline-block;
+        width: 250px;
+        height: 25px;
+    }
+
+    .btn{
+        width: 75px;
+        height: 30px;
+        border: none;
+        border-radius: 4px;
+        background: #00ffa3;
+        cursor: pointer;
+        margin-left: 130px;
+    }
+
+    img{
+        width: 100px;
+        height: 50px;
+    }
+
+</style>
+
+<form action="/admin/update_user" method="post" enctype="multipart/form-data">
+    <label class="name">
+        <span>用户名：</span><input type="text" name="name" value="{{mkk.name}}">
+    </label>
+    <label class="tuxiang">
+        <span>图像: </span> <input type="file" name="tuxiang" class="tuxiang">
+        <img src="/images/{{mkk.tuxiang}}" alt="" class="tuxiangImg">
+    </label>
+    <label class="youxiang">
+        <span> 邮箱:</span> <input type="text" name="youxiang" value="{{mkk.youxiang}}">
+    </label>
+    <label class="sjhm">
+        <span>手机号码:</span> <input type="text" name="shoujihaoma" value="{{mkk.shoujihaoma}}">
+    </label>
+    <input type="hidden" name="Id" value="{{mkk.Id}}"> <!--使用隐藏表单来传递id值-->
+    <input type="submit" value="确认更新" class="btn">
+</form>
+
+<script src="/javascripts/jQuery.js"></script>
+<script>
+    //当文件框的值发生变化时 就调用ajax改变图片的路径
+    $(".tuxiang").change(function () {
+        //创建FormData对象 将文件转化为二进制
+        var dataFile = new FormData();
+        //FromData对象是DOM对象因此在jQuery中要转化
+        var file = $(this).prop("files")[0];
+        //使用append方法添加字段
+        dataFile.append("logo",file);
+        console.log(dataFile);
+        $.ajax({
+            url:"/admin/upImg",
+            type:"post",
+            data:dataFile,
+            contentType:false,
+            processData:false,
+            success:function (data) {
+                console.log(data);
+                $(".tuxiangImg").prop("src","/images/"+data);
+            }
+        })
+    })
+</script>

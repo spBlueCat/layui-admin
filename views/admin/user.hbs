@@ -1,0 +1,75 @@
+<style>
+    *{
+        margin: 0;
+        padding: 0;
+    }
+
+    .login{
+        display: block;
+        width: 250px;
+        margin:0 auto;
+    }
+
+    .title{
+        text-align: center;
+        color: #ff6037;
+    }
+
+
+    .userName{
+        height: 24px;
+        margin-top: 20px;
+    }
+
+    .pwd{
+        height: 24px;
+        margin-top: 20px;
+    }
+
+    input[type="reset"]{
+        width: 55px;
+        height: 35px;
+        border-radius: 5px;
+        background: rgba(14, 255, 218, 0.5);
+        outline: 0;
+        border: 0;
+        margin: 20px;
+        cursor: pointer;
+    }
+    input[type="submit"]{
+        width: 55px;
+        height: 35px;
+        border-radius: 5px;
+        background: rgba(243, 75, 54, 0.5);
+        outline: 0;
+        border: 0;
+        margin: 20px;
+        cursor: pointer;
+    }
+
+    span{
+        display: inline-block;
+        width: 60px;
+        height: 30px;
+        font-size: 18px;
+        margin-right: 10px;
+    }
+    
+    label{
+        display: block;
+    }
+
+
+
+</style>
+<body>
+<div class="login">
+    <h1 class="title">管理系统</h1>
+    <form action="">
+        <label><span>用户名:</span><input type="text" class="userName"></label>
+        <label><span>密码:</span><input type="password" class="pwd"></label>
+        <input type="reset" vlaue="重置">
+        <input type="submit" value="登录">
+    </form>
+</div>
+</body>

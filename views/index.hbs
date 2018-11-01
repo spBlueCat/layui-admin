@@ -1,0 +1,36 @@
+
+<input type="file" id="myfile" multiple>
+<input type="button" value="ajax" id="btn">
+<script>
+    var btn = document.querySelector("#btn");
+    btn.addEventListener('click',function () {
+      var myfile = document.querySelector("#myfile").files;
+        //创建XHR对象
+        var ajax = new XMLHttpRequest();
+        //让对象请求 open("请求的方式","请求的地址",请求代码执行顺序);
+        /*
+            请求的方式:get 和 post
+            请求的地址: 指的
+            请求代码执行顺序：true代表异步,false代表同步
+         */
+       /* alert(ajax.readyState); //0  请求还未初始化*/
+        ajax.open("post",'/abc',false);
+        /*ajax.setRequestHeader("Content-type","multipart/form-data");*/
+       /* alert(ajax.readyState); //1  请求正在发送状态*/
+        //发送请求
+        var fileData = new FormData(); //设置formData对象 用以保存文件数据
+        for(let i=0,len=myfile.length;i<len;i++){
+            fileData.append("logo",myfile[i]); //把文件数据myfile存到fileData对象里面取数据名称为logo
+        };
+        ajax.send(fileData);//把数据对象发送
+        //监听响应
+       /* ajax.onreadystatechange=function () {
+            alert(ajax.readyState); //2.请求已接收 3.请求处理中的等待响应   4.请求已完成且响应已就绪
+            if(ajax.readyState=4 && ajax.status==200){
+
+            }
+        };*/
+    });
+
+</script>
+

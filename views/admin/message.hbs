@@ -1,0 +1,252 @@
+<style>
+
+    *{
+        box-sizing: border-box;
+    }
+
+    a{
+        color: #fff;
+        text-decoration: none;
+    }
+
+    table tr th{
+        border: 1px solid #bbf2f4;
+        padding: 8px;
+        line-height: 1.42857143;
+        vertical-align: top;
+        text-align: left;
+    }
+
+    table tr td{
+        width: 100px;
+        border: 1px solid #b2eef4;
+        vertical-align: middle;
+        padding: 8px;
+        line-height: 1.42857143;
+    }
+
+    img{
+        width: 50px;
+        height: 50px;
+    }
+
+    .del,.upd{
+        display: inline-block;
+        width: 35px;
+        height: 25px;
+        text-align: center;
+        background: #60a0ff;
+        border-radius: 3px;
+        line-height: 25px;
+    }
+
+    .upd{
+        margin-left: 10px;
+    }
+
+    .id{
+        position: relative;
+    }
+
+    .asc{
+        display: inline-block;
+        position: absolute;
+        top:8px;
+        right: 50px;
+        width: 8px;
+        height: 8px;
+        clip-path:polygon(50% 0,100% 100%,0 100%);
+        background: #e2e2e2;
+    }
+
+    .desc{
+        display: inline-block;
+        position: absolute;
+        top:18px;
+        right: 50px;
+        width: 8px;
+        height: 8px;
+        clip-path:polygon(0 0,100% 0,50% 100%);
+        background: #e2e2e2;
+    }
+
+    .page{
+        display: block;
+        margin: 0 auto;
+        position: absolute;
+        top: 375px;
+    }
+
+    .loading{
+        display: block;
+        position: absolute;
+        width: 100px;
+        height: 100px;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        margin: auto;
+    }
+
+
+
+</style>
+<form action="/admin/user_add" method='get' enctype="multipart/form-data">
+    <input type="submit" value="添加用户">
+</form>
+<table class="tab">
+    <tr>
+        <th class="id">ID <span class="arrow asc"></span><span class="arrow desc"></span></th>
+        <th>姓名</th>
+        <th>邮箱</th>
+        <th>留言内容</th>
+        <th style="width: 200px;">留言时间</th>
+    </tr>
+    <!--{{#each dataList}}
+        <tr>
+            <td>{{Id}}</td>
+            <td>{{messageName}}</td>
+            <td>{{messageEmail}}</td>
+            <td>{{messageContent}}</td>
+            <td>{{messageTime}}</td>
+            <td><a href="/admin/deleteListData?mid={{Id}}" class="del">删除</a><a href="/admin/updateUser?mid={{Id}}" class="upd">更新</a></td>
+        </tr><br>
+    {{/each}}-->
+    <div class="page">
+    </div>
+    <div class="loading"><img src="/images/5-121204193935-51.gif" alt=""></div>
+</table>
+
+<script src="/javascripts/jQuery.js"></script>
+<script>
+    $(function () {
+        var pageSum = 5; //表示显示5个页面
+        var start = 1;
+        var end = 5;
+        var active_num;
+        var order ;
+        function dataList(num){
+          $(".loading").stop(true).fadeIn("fast");
+          $.ajax({
+              url:"/admin/message_data",
+              data:{order:order,pageCode:num},
+              success:function (data) {
+                  $(".loading").fadeOut("fast");
+                  $(".row").remove();
+                  $(".page").children().remove();
+                      for(let i=0,len=data.messageData.length;i<len;i++){
+                          $(".tab").append($(`<tr class="row"><td class="messageId">${data.messageData[i].Id}</td><td>${data.messageData[i].messageName}</td><td>${data.messageData[i].messageEmail}</td><td>${data.messageData[i].messageContent}</td><td>${(new Date(data.messageData[i].messageTIME)).toLocaleString()}</td><td><a href="javascript:0;" mid=${data.messageData[i].Id}  class="del">删除</a><a href="/admin/updateUser?mid={{Id}}" class="upd">更新</a></td></tr>`));
+                      }
+                  $(".del").click(function () {
+                    var confirm = window.confirm("确认删除");
+                    if(confirm){
+                        $.ajax({
+                            url:'/admin/delMessage',
+                            data:{mid:$(this).attr("mid")},
+                            success:function (data) {
+                                  dataList(num);
+                            }
+                        })
+                    }
+                  });
+                 page(data,num);
+              }
+          });
+        };
+        dataList(1);
+
+        function page(data,active_page) {
+            active_num = active_page;
+            //如果当前页码 小于或等于总页码的一半 页面范围为1-5
+            if (active_num <= Math.ceil(pageSum / 2)) {
+                start = 1;
+                end = pageSum;
+                if(end>data.pageNum){  //如果当前结束页大于总页数 则最大页数等于结束页
+                  end = data.pageNum;
+                }
+            }
+            //如果当前页码 大于总页码的一半 页码范围就改变
+            if (active_num > Math.ceil(pageSum / 2)) {
+                start = Math.ceil(active_num - pageSum / 2);
+                end = pageSum + start - 1;
+                if (end > data.pageNum) {  //如果当前页数大于总页数 就让结束页等于总页数
+                    end = data.pageNum;
+                    start = end - (pageSum - 1); //使起始页随结束页的大小而改变
+                }
+                if(start<=0){
+                  start = 1;
+                }
+            }
+
+            //如果当前点击的页数 大于总页数
+            if(active_num>data.pageNum){
+              active_num = data.pageNum;  //让当前的页数 大于最后一页
+              dataList(active_num); //重新载人数据
+            }
+
+
+            if (active_num > 1) {
+                $(`<span>上一页</span>`).prependTo('.page').css({
+                    padding: 10,
+                    border: "1px solid #aaa"
+                }).click(function () {
+                    active_num--;
+                    dataList(active_num);
+                });
+            }
+
+            for (let i = start, len = end; i <= end; i++) {
+                var color = i == active_num ? "red" : "#aaa";
+                $(`<span>${i}</span>`).appendTo(".page").css({
+                    padding: 10,
+                    border: "1px solid " + color
+                }).click(function () {
+                    dataList($(this).text());
+                });
+            }
+
+            if (active_num < data.pageNum) {
+                $(`<span>下一页</span>`).appendTo('.page').css({padding: 10, border: "1px solid #aaa"}).click(function () {
+                    active_num++;
+                    dataList(active_num);
+                });
+            }
+        }
+
+            $(".desc").click(function () {
+                $(this).css({background:"#333"});
+                $(".asc").css({background:""});
+                order = "Id desc";
+                dataList(active_num);
+                /*$.ajax({
+                    url:"/admin/message_data",
+                    data:{o:"Id desc",pageCode:active_num},
+                    success:function (data) {
+                        console.log(data);
+                        console.log(active_num);
+                        dataList(active_num);
+                    }
+                })*/
+
+            });
+            $(".asc").click(function(){
+                $(this).css({background:"#333"});
+                $(".desc").css({background:""});
+                order = "Id asc";
+                dataList(active_num);
+                /*$.ajax({
+                    url:"/admin/message_data",
+                    data:{o:"Id asc",pageCode:active_num},
+                    success:function (data) {
+                        console.log(data);
+                        console.log(active_num);
+                        dataList(active_num);
+                    }
+                })*/
+
+            });
+    });
+
+
+</script>

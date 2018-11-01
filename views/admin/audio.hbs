@@ -1,0 +1,45 @@
+
+<script src="/javascripts/jQuery.js"></script>
+<div class="search">
+    <input type="text" class="search_word">
+    <input type="button" class="sub" value="搜索">
+    <ul class="list"></ul>
+    <div class="player">
+        <h1 style="display: none;"></h1>
+        <img src="" alt="" width="100" style="display: none;">
+        <audio src="" controls autoplay style="display: none;"></audio>
+    </div>
+</div>
+<script>
+    function player_auto(data) {
+        console.log(data.data);
+        $('.player h1').text(data.data.audio_name).show();
+        $('.player img').attr('src',data.data.img).show();
+        $('.player audio').attr('src',data.data.play_url).show();
+    }
+
+    function  search_audio(data) {
+        var datalist = data.data.lists;
+        $(".list").children().remove();
+        for(let i=0,len=datalist.length;i<len;i++){
+            //存AlbumID 和 FileHash的数据
+            /*$(".list").append("<li><span AlbumID='"+datalist[i].AlbumID+"' FileHash='"+datalist[i].FileHash+"'>"+datalist[i].FileName+"</span></li>");*/
+            $(".list").append(`<li><span AlbumID='${datalist[i].AlbumID}' FileHash='${datalist[i].FileHash}'>${datalist[i].FileName}</span></li>`)
+        };
+        $('.list span').off("click").click(function () {
+            //音乐播放地址
+            /*var url = `http://www.kugou.com/yy/index.php?r=play/getdata&hash=${$(this).attr('.FileHash')}&album_id=${$(this).attr('.AlbumID')}&callback=search_audio`;*/
+            var url = "http://www.kugou.com/yy/index.php?r=play/getdata&hash="+$(this).attr('FileHash')+"&album_id="+$(this).attr('AlbumID')+"&_=1497972864535&callback=player_auto";
+            $('.cc').remove();
+            $("<script>").appendTo($("body")).prop("src",url).addClass("cc");
+            console.log($(".cc"));
+        });
+    }
+
+    $(".sub").click(function () {
+      //音乐列表地址
+        var url="http://songsearch.kugou.com/song_search_v2?callback=search_audio&keyword="+$(".search_word").val()+"&page=1&pagesize=1&userid=-1&clientver=&platform=WebFilter&tag=em&filter=2&iscorrection=1&privilege_filter=0";
+        $('.abc').remove();
+        $("<script>").appendTo($("body")).prop("src",url).addClass("abc");
+    })
+</script>
